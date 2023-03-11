@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
-      title: 'Người Đọc',
+      title: 'Lớp Học',
       home: HomePage(),
     );
   }
@@ -37,10 +37,9 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _soLuongSinhVienController =
       TextEditingController();
   final TextEditingController _maGiangVienController = TextEditingController();
-  final TextEditingController _soDienThoaiController = TextEditingController();
 
   final CollectionReference _productss =
-      FirebaseFirestore.instance.collection('readers');
+      FirebaseFirestore.instance.collection('classroom');
 
   // This function is triggered when the floatting button or one of the edit buttons is pressed
   // Adding a product if no documentSnapshot is passed
@@ -53,7 +52,6 @@ class _HomePageState extends State<HomePage> {
       _soLuongSinhVienController.text = documentSnapshot['soLuongSinhVien'];
       _tenLopController.text = documentSnapshot['tenLop'];
       _maGiangVienController.text = documentSnapshot['maGiangVien'];
-      _soDienThoaiController.text = documentSnapshot['soDienThoai'].toString();
     }
 
     await showModalBottomSheet(
@@ -73,28 +71,21 @@ class _HomePageState extends State<HomePage> {
               children: [
                 TextField(
                   controller: _maLopHocController,
-                  decoration: const InputDecoration(labelText: 'Mã Người Đọc'),
+                  decoration: const InputDecoration(labelText: 'Mã Lớp Học'),
                 ),
                 TextField(
                   controller: _tenLopController,
-                  decoration: const InputDecoration(labelText: 'Tên'),
+                  decoration: const InputDecoration(labelText: 'Tên Lớp'),
                 ),
                 TextField(
                   controller: _soLuongSinhVienController,
-                  decoration: const InputDecoration(labelText: 'Ngày Sinh'),
+                  decoration: const InputDecoration(labelText: 'Số Lượng Sinh Viên'),
                 ),
                 TextField(
                   controller: _maGiangVienController,
-                  decoration: const InputDecoration(labelText: 'Địa Chỉ'),
+                  decoration: const InputDecoration(labelText: 'Mã Giảng Viên'),
                 ),
-                TextField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  controller: _soDienThoaiController,
-                  decoration: const InputDecoration(
-                    labelText: 'Số Điện Thoại',
-                  ),
-                ),
+
                 const SizedBox(
                   height: 20,
                 ),
@@ -106,9 +97,8 @@ class _HomePageState extends State<HomePage> {
                     final String? soLuongSinhVien =
                         _soLuongSinhVienController.text;
                     final String? maGiangVien = _maGiangVienController.text;
-                    final double? soDienThoai =
-                        double.tryParse(_soDienThoaiController.text);
-                    if (tenLop != null && soDienThoai != null) {
+
+                    if (tenLop != null) {
                       if (action == 'create') {
                         // Persist a new product to Firestore
                         await _productss.add({
@@ -116,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                           "tenLop": tenLop,
                           "soLuongSinhVien": soLuongSinhVien,
                           "maGiangVien": maGiangVien,
-                          "soDienThoai": soDienThoai
+
                         });
                       }
 
@@ -127,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                           "tenLop": tenLop,
                           "soLuongSinhVien": soLuongSinhVien,
                           "maGiangVien": maGiangVien,
-                          "soDienThoai": soDienThoai
+
                         });
                       }
 
@@ -136,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                       _tenLopController.text = '';
                       _soLuongSinhVienController.text = '';
                       _maGiangVienController.text = '';
-                      _soDienThoaiController.text = '';
+
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -178,8 +168,8 @@ class _HomePageState extends State<HomePage> {
                 return Card(
                   margin: const EdgeInsets.all(10),
                   child: ListTile(
-                    title: Text(documentSnapshot['ten']),
-                    subtitle: Text(documentSnapshot['soDienThoai'].toString()),
+                    title: Text(documentSnapshot['tenLop']),
+
                     trailing: SizedBox(
                       width: 100,
                       child: Row(
